@@ -114,7 +114,7 @@ function drawWheel(){
   ctx.clearRect(0,0,cvs.width,cvs.height);
   const R=cvs.width/2,slice=360/dishes.length;
   dishes.forEach((d,i)=>{
-    const st=i*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180,mid=(st+ed)/2;
+    const st=i*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180-0.001,mid=(st+ed)/2;
     ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,st,ed);ctx.closePath();
     ctx.fillStyle=`hsl(${i*360/dishes.length},60%,75%)`;ctx.fill();
     ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
@@ -178,7 +178,7 @@ spinBtn.onclick=()=>{
   gsap.to(cvs,{rotation:`+=${360*4+Math.random()*360}`,duration:3.4,ease:'power4.out',
     onComplete:()=>{
       spinBtn.disabled=false;                    // ★ 즉시 복구
-      const slice=360/dishes.length,f=gsap.getProperty(cvs,'rotation'),
+      const slice = dishes.length === 1 ? 360 : 360 / dishes.length,f=gsap.getProperty(cvs,'rotation'),
             idx=Math.floor((((pointerDeg-f)%360)+360)%360/slice);
       show(dishes[idx]);
     }});
