@@ -1,0 +1,18 @@
+{
+  "name": "Lunch Roulette",
+  "short_name": "Lunch",
+  "description": "점심 메뉴 고민 끝! 귀여운 룰렛으로 오늘의 점심을 골라보세요.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafafa",
+  "theme_color": "#212121",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
