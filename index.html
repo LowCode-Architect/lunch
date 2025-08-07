@@ -43,7 +43,7 @@ canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
              filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
 #pointer{--pw:clamp(14px,4vw,20px);--ph:calc(var(--pw)*1.45);
 +   position:absolute;left:50%;
-+   bottom:calc(-0.38*var(--ph)+env(safe-area-inset-bottom));
++   top:calc(100% - 0.62*var(--ph));
          transform:translateX(-50%);
          width:0;height:0;
          border-left:var(--pw) solid transparent;
