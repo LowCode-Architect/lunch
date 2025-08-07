@@ -41,14 +41,15 @@ body{display:flex;flex-direction:column;align-items:center;gap:16px;
 #wrapper{position:relative;width:92vw;max-width:var(--mx)}
 canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
              filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
-#pointer{--pw:clamp(14px,4vw,20px);--ph:calc(var(--pw)*1.45);
+#pointer{--pw:clamp(14px,4vw,20px);
+         --ph:calc(var(--pw)*1.45);
 +   position:absolute;left:50%;
-+   top:calc(100% - 0.85*var(--ph));
++   top:calc(-0.62*var(--ph) + env(safe-area-inset-top));
          transform:translateX(-50%);
          width:0;height:0;
          border-left:var(--pw) solid transparent;
          border-right:var(--pw) solid transparent;
-         border-bottom:var(--ph) solid #c0392b;
+         border-top:var(--ph) solid #c0392b;
          filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));pointer-events:none;z-index:100}
 
 /* 버튼 */
