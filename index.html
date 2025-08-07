@@ -94,7 +94,7 @@
                 --ph: calc(var(--pw)*1.45);
                 position: absolute;
                 left: 50%;
-                top: calc(-0.62*var(--ph) + env(safe-area-inset-top));
+                top: calc(-0.85*var(--ph) + env(safe-area-inset-top));/* 원 위 85 % 겹침 */
                 @media (min-width:600px) {
                     #pointer {
                         top: calc(-0.9*var(--ph));
@@ -107,7 +107,7 @@
                 /* ▼ 아래 향하도록 border-top */
                 border-left: var(--pw) solid transparent;
                 border-right: var(--pw) solid transparent;
-                border-bottom: var(--ph) solid #c0392b;
+                border-top: var(--ph) solid #c0392b;
                 /*filter:drop-shadow(0 2px 4px rgba(0,0,0,.4)); */
                 pointer-events: none;
                 z-index: 100;
