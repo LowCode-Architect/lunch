@@ -45,6 +45,9 @@ canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
          --ph:calc(var(--pw)*1.45);
          position:absolute;left:50%;
          top:calc(-0.85*var(--ph) + env(safe-area-inset-top));
+         @media (min-width:600px){
+          #pointer{ top:calc(-0.9*var(--ph)); }   /* 데스크톱에서 좀 더 올림 */
+         }
          transform:translateX(-50%);
          width:0;height:0;
          /* ▼ 아래 향하도록 border-top */
