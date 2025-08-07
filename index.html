@@ -90,11 +90,13 @@
                 filter:drop-shadow(0 6px 10px rgba(0,0,0,.12));
             }
             #pointer {
+                /*삼각형크기 */
                 --pw: clamp(14px,4vw,20px);
                 --ph: calc(var(--pw)*1.45);
                 position: absolute;
                 left: 50%;
-                top: calc(-0.75*var(--ph) + env(safe-area-inset-top));/* 원 위 85 % 겹침 */
+                /* wrapper 우위(북쪽)에서 삼각형 높이 75%만 파이에 겹치기 */
+                top: calc(-0.75*var(--ph) + env(safe-area-inset-top));
                 /*@media (min-width:600px) {
                     #pointer {
                         top: calc(-0.9*var(--ph));
@@ -102,15 +104,14 @@
                     /* 데스크톱에서 좀 더 올림 */
                 }
                 transform: translateX(-50%);
-                width: 0;
-                height: 0;
-                /* ▼ 아래 향하도록 border-top */
+                width:0;height:0;
+                /* ▼ 아래 향한 삼각형 border-top */
                 border-left: var(--pw) solid transparent;
                 border-right: var(--pw) solid transparent;
                 border-top: var(--ph) solid #c0392b;
-                /*filter:drop-shadow(0 2px 4px rgba(0,0,0,.4)); */
+                filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
                 pointer-events: none;
-                z-index: 100;
+                z-index: 100; /* 캔버스·입력창 위에 표시 */
             }
 
             /* 버튼 */
