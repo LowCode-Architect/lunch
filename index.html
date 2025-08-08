@@ -18,41 +18,71 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{display:flex;flex-direction:column;align-items:center;gap:16px;
        min-height:100vh;padding:24px 12px;background:#fafafa;
-       font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+       font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+       touch-action:manipulation}
   #addForm{display:flex;gap:8px;width:100%;max-width:var(--mx)}
-  #dishInput{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1rem}
+  #dishInput{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1rem;
+             -webkit-appearance:none;appearance:none}
   #addBtn{padding:12px 20px;border:none;border-radius:8px;background:var(--accent);
-          color:#fff;font-weight:600;cursor:pointer}
-  #wrapper{position:relative;width:92vw;max-width:var(--mx)}
-  canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
-               filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
-  #pointer{--pw:clamp(14px,4vw,20px);--ph:calc(var(--pw)*1.4);
+          color:#fff;font-weight:600;cursor:pointer;touch-action:manipulation;
+          -webkit-appearance:none;appearance:none}
+  #wrapper{position:relative;width:90vw;max-width:400px;margin:0 auto}
+  canvas#wheel{width:100%;height:auto;aspect-ratio:1/1;border-radius:50%;background:#fff;
+               filter:drop-shadow(0 6px 10px rgba(0,0,0,.12));
+               touch-action:manipulation;cursor:pointer}
+  #pointer{--pw:clamp(16px,5vw,24px);--ph:calc(var(--pw)*1.4);
            position:absolute;left:50%;top:calc(-0.38*var(--ph));
            transform:translateX(-50%);width:0;height:0;
            border-left:var(--pw) solid transparent;border-right:var(--pw) solid transparent;
            border-top:var(--ph) solid #c0392b;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
            pointer-events:none;z-index:10}
-  #spinBtn{padding:14px 0;width:100%;max-width:var(--mx);font-size:1.1rem;font-weight:700;
-           border:none;border-radius:12px;background:#000;color:#fff;cursor:pointer}
+  #spinBtn{padding:16px 0;width:100%;max-width:var(--mx);font-size:1.2rem;font-weight:700;
+           border:none;border-radius:12px;background:#000;color:#fff;cursor:pointer;
+           touch-action:manipulation;-webkit-appearance:none;appearance:none;
+           min-height:48px}
   details{width:100%;max-width:var(--mx)}
-  summary{cursor:pointer;text-align:center;padding:6px;color:#555;font-size:.95rem}
+  summary{cursor:pointer;text-align:center;padding:12px;color:#555;font-size:.95rem;
+          touch-action:manipulation;min-height:44px;display:flex;align-items:center;
+          justify-content:center}
   ul#list{list-style:none;padding:0;margin:0}
   ul#list li{display:flex;align-items:center;justify-content:space-between;
-             margin:4px 0;padding:10px;border-radius:8px;background:#fff;border:1px solid #ddd}
-  ul#list li span{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .iconBtn{border:none;background:none;font-size:1.2rem;cursor:pointer;padding:6px}
+             margin:4px 0;padding:12px;border-radius:8px;background:#fff;border:1px solid #ddd;
+             min-height:48px}
+  ul#list li span{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                   font-size:1rem}
+  .iconBtn{border:none;background:none;font-size:1.4rem;cursor:pointer;padding:8px;
+           min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;
+           touch-action:manipulation;-webkit-appearance:none;appearance:none}
   .delete{color:var(--danger)}.edit{color:#3949ab}
 
   /* ── 모달 ── */
   #modal{position:fixed;inset:0;background:rgba(0,0,0,.45);
          display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;
-         transition:.25s}
+         transition:.25s;z-index:1000;touch-action:manipulation}
   #modal.show{opacity:1;visibility:visible}
-  #modal .box{background:#fff;padding:28px 22px;border-radius:14px;max-width:80vw;text-align:center;
-              animation:pop .35s cubic-bezier(.4,1.4,.6,1);}
-  #closeBtn{margin-top:20px;padding:10px 24px;border:none;border-radius:10px;
-            background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  #modal .box{background:#fff;padding:32px 24px;border-radius:14px;max-width:85vw;text-align:center;
+              animation:pop .35s cubic-bezier(.4,1.4,.6,1);max-height:80vh;overflow-y:auto}
+  #resultText{margin-bottom:16px;font-size:1.3rem;word-break:keep-all;line-height:1.4}
+  #closeBtn{margin-top:20px;padding:12px 28px;border:none;border-radius:10px;
+            background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
+            touch-action:manipulation;-webkit-appearance:none;appearance:none;
+            min-height:48px;font-size:1rem}
   @keyframes pop{0%{transform:scale(.5);opacity:.2}100%{transform:scale(1);opacity:1}}
+  
+  /* 모바일 최적화 */
+  @media (max-width: 480px) {
+    body{padding:16px 8px;gap:12px}
+    #addForm{gap:6px}
+    #dishInput{padding:10px;font-size:16px} /* iOS 줌 방지 */
+    #addBtn{padding:10px 16px;font-size:.95rem}
+    #wrapper{width:95vw}
+    #spinBtn{font-size:1.1rem;padding:14px 0}
+    ul#list li{padding:10px;margin:3px 0}
+    ul#list li span{font-size:.95rem}
+    .iconBtn{font-size:1.3rem;padding:6px;min-width:40px;min-height:40px}
+    #modal .box{padding:24px 20px;max-width:90vw}
+    #resultText{font-size:1.2rem}
+  }
 </style>
 </head>
 <body>
@@ -76,110 +106,300 @@
 <!-- 모달 -->
 <div id="modal">
   <div class="box">
-    <h2 id="resultText" style="margin-bottom:12px;font-size:1.25rem"></h2>
+    <h2 id="resultText"></h2>
     <button id="closeBtn">닫기</button>
   </div>
 </div>
 
 <script>
-/* ── localStorage ── */
-const KEY='lunchRouletteDishes';
-let dishes=JSON.parse(localStorage.getItem(KEY)||
-        '["치킨","샌드위치","샐러드","김치찌개","된장찌개","비빔밥","불고기","라면"]');
+/* ── 전역 변수 ── */
+let dishes = ["치킨","샌드위치","샐러드","김치찌개","된장찌개","비빔밥","불고기","라면"];
+let isSpinning = false;
 
 /* ── 캔버스 설정 ── */
-const cvs=document.getElementById('wheel'),ctx=cvs.getContext('2d');
-function fitCanvas(){
-  const size=Math.min(document.getElementById('wrapper').clientWidth,480),
-        dpr=window.devicePixelRatio||1;
-  cvs.width=cvs.height=size*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+const cvs = document.getElementById('wheel');
+const ctx = cvs.getContext('2d');
+const wrapper = document.getElementById('wrapper');
+
+function getCanvasSize() {
+  const containerWidth = wrapper.clientWidth;
+  const maxSize = Math.min(containerWidth, 400);
+  return maxSize;
+}
+
+function fitCanvas() {
+  const size = getCanvasSize();
+  const dpr = window.devicePixelRatio || 1;
+  
+  // 캔버스 실제 크기 설정
+  cvs.width = size * dpr;
+  cvs.height = size * dpr;
+  
+  // CSS 크기 설정
+  cvs.style.width = size + 'px';
+  cvs.style.height = size + 'px';
+  
+  // 컨텍스트 스케일링
+  ctx.scale(dpr, dpr);
+  
   drawWheel();
 }
-window.addEventListener('resize',fitCanvas); fitCanvas();
+
+// 리사이즈 이벤트 (디바운싱 적용)
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(fitCanvas, 100);
+});
+
+// 초기 설정
+fitCanvas();
 
 /* ── 룰렛 그리기 ── */
-const pointerDeg=270;
-function drawWheel(){
-  ctx.clearRect(0,0,cvs.width,cvs.height);
-  const R=cvs.width/2,slice=360/dishes.length;
-  dishes.forEach((dish,i)=>{
-    const st=i*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180,mid=(st+ed)/2;
-    ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,st,ed);ctx.closePath();
-    ctx.fillStyle=`hsl(${i*360/dishes.length},60%,75%)`;
-    ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    const x=R+Math.cos(mid)*R*0.6,y=R+Math.sin(mid)*R*0.6;
-    ctx.save();ctx.translate(x,y);ctx.rotate(mid+Math.PI/2);
-    ctx.font=`bold ${Math.max(R*0.1,14)}px sans-serif`;
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#000';
-    ctx.fillText(dish,0,0);ctx.restore();
+const pointerDeg = 270;
+
+function drawWheel() {
+  if (dishes.length === 0) return;
+  
+  const size = getCanvasSize();
+  const R = size / 2;
+  const slice = 360 / dishes.length;
+  
+  ctx.clearRect(0, 0, size, size);
+  
+  dishes.forEach((dish, i) => {
+    const startAngle = i * slice * Math.PI / 180;
+    const endAngle = (i + 1) * slice * Math.PI / 180;
+    const midAngle = (startAngle + endAngle) / 2;
+    
+    // 섹션 그리기
+    ctx.beginPath();
+    ctx.moveTo(R, R);
+    ctx.arc(R, R, R, startAngle, endAngle);
+    ctx.closePath();
+    
+    // 색상 설정
+    const hue = (i * 360 / dishes.length) % 360;
+    ctx.fillStyle = `hsl(${hue}, 65%, 70%)`;
+    ctx.fill();
+    
+    // 테두리
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    
+    // 텍스트 그리기
+    const textRadius = R * 0.65;
+    const textX = R + Math.cos(midAngle) * textRadius;
+    const textY = R + Math.sin(midAngle) * textRadius;
+    
+    ctx.save();
+    ctx.translate(textX, textY);
+    ctx.rotate(midAngle + Math.PI / 2);
+    
+    // 폰트 크기 동적 계산
+    const fontSize = Math.max(Math.min(R * 0.12, 18), 12);
+    ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#222';
+    
+    // 텍스트 길이에 따른 조정
+    const maxWidth = R * 0.8;
+    const textWidth = ctx.measureText(dish).width;
+    if (textWidth > maxWidth) {
+      ctx.font = `bold ${fontSize * 0.8}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
+    }
+    
+    ctx.fillText(dish, 0, 0);
+    ctx.restore();
   });
+  
   renderList();
-  localStorage.setItem(KEY,JSON.stringify(dishes));
 }
 
-/* ── 목록 ── */
-function renderList(){
-  const ul=document.getElementById('list'); ul.innerHTML='';
-  dishes.forEach((dish,i)=>{
-    const li=document.createElement('li');
-    li.innerHTML=`<span>${dish}</span>
-      <button class="iconBtn edit">✏️</button>
-      <button class="iconBtn delete">❌</button>`;
-    li.querySelector('.edit').onclick=()=>{
-      const v=prompt('메뉴 수정',dish);if(v&&v.trim()){dishes[i]=v.trim();drawWheel();}
-    };
-    li.querySelector('.delete').onclick=()=>{
-      if(confirm(`"${dish}" 삭제?`)){dishes.splice(i,1);drawWheel();}
-    };
+/* ── 목록 렌더링 ── */
+function renderList() {
+  const ul = document.getElementById('list');
+  ul.innerHTML = '';
+  
+  dishes.forEach((dish, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${dish}</span>
+      <button class="iconBtn edit" type="button" aria-label="수정">✏️</button>
+      <button class="iconBtn delete" type="button" aria-label="삭제">❌</button>
+    `;
+    
+    // 수정 버튼
+    const editBtn = li.querySelector('.edit');
+    editBtn.addEventListener('click', () => {
+      const newName = prompt('메뉴 수정', dish);
+      if (newName && newName.trim()) {
+        dishes[i] = newName.trim();
+        drawWheel();
+      }
+    });
+    
+    // 삭제 버튼
+    const deleteBtn = li.querySelector('.delete');
+    deleteBtn.addEventListener('click', () => {
+      if (confirm(`"${dish}" 메뉴를 삭제하시겠습니까?`)) {
+        dishes.splice(i, 1);
+        drawWheel();
+      }
+    });
+    
     ul.appendChild(li);
   });
 }
 
-/* ── 캔버스 터치 삭제 ── */
-cvs.addEventListener('click',e=>{
-  const R=cvs.width/2,rect=cvs.getBoundingClientRect(),scale=cvs.width/rect.width,
-        x=(e.clientX-rect.left)*scale,y=(e.clientY-rect.top)*scale,
-        dist=Math.hypot(x-R,y-R);
-  if(dist>R) return;
-  const idx=Math.floor(((Math.atan2(y-R,x-R)*180/Math.PI+360)%360)/(360/dishes.length));
-  if(confirm(`"${dishes[idx]}" 삭제?`)){dishes.splice(idx,1);drawWheel();}
+/* ── 터치/클릭 이벤트 처리 ── */
+function getEventPos(e) {
+  const rect = cvs.getBoundingClientRect();
+  const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+  const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+  
+  const x = (clientX - rect.left) * (cvs.width / rect.width) / (window.devicePixelRatio || 1);
+  const y = (clientY - rect.top) * (cvs.height / rect.height) / (window.devicePixelRatio || 1);
+  
+  return { x, y };
+}
+
+function handleCanvasInteraction(e) {
+  e.preventDefault();
+  
+  if (isSpinning || dishes.length === 0) return;
+  
+  const size = getCanvasSize();
+  const R = size / 2;
+  const pos = getEventPos(e);
+  const dist = Math.hypot(pos.x - R, pos.y - R);
+  
+  if (dist > R) return;
+  
+  const angle = (Math.atan2(pos.y - R, pos.x - R) * 180 / Math.PI + 360) % 360;
+  const slice = 360 / dishes.length;
+  const idx = Math.floor(angle / slice);
+  
+  if (idx >= 0 && idx < dishes.length) {
+    if (confirm(`"${dishes[idx]}" 메뉴를 삭제하시겠습니까?`)) {
+      dishes.splice(idx, 1);
+      drawWheel();
+    }
+  }
+}
+
+// 터치 및 클릭 이벤트 등록
+cvs.addEventListener('click', handleCanvasInteraction);
+cvs.addEventListener('touchstart', handleCanvasInteraction, { passive: false });
+
+/* ── 모달 관리 ── */
+const modal = document.getElementById('modal');
+const resultEl = document.getElementById('resultText');
+const closeBtn = document.getElementById('closeBtn');
+
+function showResult(dish) {
+  resultEl.textContent = `오늘의 점심은 "${dish}" 입니다!`;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden'; // 스크롤 방지
+  
+  // 폭죽 효과
+  const duration = 1500;
+  const end = Date.now() + duration;
+  
+  function runConfetti() {
+    if (Date.now() < end) {
+      confetti({
+        particleCount: 20,
+        startVelocity: 30,
+        spread: 70,
+        origin: { y: 0.3 }
+      });
+      requestAnimationFrame(runConfetti);
+    }
+  }
+  runConfetti();
+}
+
+function hideModal() {
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+  isSpinning = false;
+}
+
+closeBtn.addEventListener('click', hideModal);
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    hideModal();
+  }
 });
 
-/* ── 모달 & 폭죽 ── */
-const modal=document.getElementById('modal'),
-      resultEl=document.getElementById('resultText'),
-      closeBtn=document.getElementById('closeBtn');
-function showResult(text){
-  resultEl.textContent=`오늘의 점심은 “${text}” 입니다!`;
-  modal.classList.add('show');
-  /* 폭죽 1.5초 */
-  const end=Date.now()+1500;
-  (function frame(){
-    confetti({particleCount:16,startVelocity:28,spread:60,origin:{y:.25}});
-    if(Date.now()<end) requestAnimationFrame(frame);
-  })();
-}
-function hideModal(){modal.classList.remove('show');}
-closeBtn.onclick=hideModal; modal.addEventListener('click',e=>{if(e.target===modal)hideModal();});
-window.addEventListener('keyup',e=>{if(e.key==='Escape')hideModal();});
+// ESC 키로 모달 닫기
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    hideModal();
+  }
+});
 
-/* ── 돌리기 ── */
-document.getElementById('spinBtn').onclick=()=>{
-  if(dishes.length<2){alert('메뉴를 두 개 이상 입력하세요!');return;}
-  gsap.to(cvs,{rotation:`+=${360*4+Math.random()*360}`,duration:3.5,ease:'power4.out',
-    onComplete:()=>{
-      const slice=360/dishes.length,
-            final=gsap.getProperty(cvs,'rotation'),
-            idx=Math.floor((((pointerDeg-final)%360)+360)%360/slice);
-      showResult(dishes[idx]);
-    }});
-};
+/* ── 룰렛 돌리기 ── */
+const spinBtn = document.getElementById('spinBtn');
+
+spinBtn.addEventListener('click', () => {
+  if (dishes.length < 2) {
+    alert('메뉴를 두 개 이상 입력해주세요!');
+    return;
+  }
+  
+  if (isSpinning) return;
+  
+  isSpinning = true;
+  spinBtn.disabled = true;
+  spinBtn.textContent = '돌리는 중...';
+  
+  const finalRotation = 360 * 4 + Math.random() * 360;
+  
+  gsap.to(cvs, {
+    rotation: `+=${finalRotation}`,
+    duration: 3.5,
+    ease: 'power4.out',
+    onComplete: () => {
+      const slice = 360 / dishes.length;
+      const currentRotation = gsap.getProperty(cvs, 'rotation') % 360;
+      const adjustedAngle = (pointerDeg - currentRotation + 360) % 360;
+      const selectedIndex = Math.floor(adjustedAngle / slice);
+      const finalIndex = selectedIndex >= dishes.length ? 0 : selectedIndex;
+      
+      showResult(dishes[finalIndex]);
+      spinBtn.disabled = false;
+      spinBtn.textContent = '돌려!';
+    }
+  });
+});
 
 /* ── 메뉴 추가 ── */
-document.getElementById('addForm').onsubmit=e=>{
-  e.preventDefault();const v=dishInput.value.trim();
-  if(v){dishes.push(v);dishInput.value='';drawWheel();}
-};
+const addForm = document.getElementById('addForm');
+const dishInput = document.getElementById('dishInput');
+
+addForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const value = dishInput.value.trim();
+  
+  if (value) {
+    if (dishes.includes(value)) {
+      alert('이미 등록된 메뉴입니다!');
+      return;
+    }
+    
+    dishes.push(value);
+    dishInput.value = '';
+    drawWheel();
+  }
+});
+
+// 초기 렌더링
+drawWheel();
 </script>
 </body>
 </html>
