@@ -1,80 +1,58 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#212121">
-<link rel="apple-touch-icon" href="icon.png">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#ffffff" />
 <title>점심메뉴 룰렛</title>
 
-<!-- OG / Twitter (생략해도 기존 그대로라면 유지) -->
-
-<!-- GSAP & Confetti -->
+<!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- Confetti (2.4 KB gzip) -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
 
 <style>
-:root{--mx:480px;--accent:#212121;--danger:#e53935}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{display:flex;flex-direction:column;align-items:center;gap:16px;
-     min-height:100svh;padding:24px 12px calc(24px + env(safe-area-inset-bottom));
-     background:#fafafa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+  :root{--mx:480px;--accent:#212121;--danger:#e53935}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{display:flex;flex-direction:column;align-items:center;gap:16px;
+       min-height:100vh;padding:24px 12px;background:#fafafa;
+       font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+  #addForm{display:flex;gap:8px;width:100%;max-width:var(--mx)}
+  #dishInput{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1rem}
+  #addBtn{padding:12px 20px;border:none;border-radius:8px;background:var(--accent);
+          color:#fff;font-weight:600;cursor:pointer}
+  #wrapper{position:relative;width:92vw;max-width:var(--mx)}
+  canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
+               filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+  #pointer{--pw:clamp(14px,4vw,20px);--ph:calc(var(--pw)*1.4);
+           position:absolute;left:50%;top:calc(-0.38*var(--ph));
+           transform:translateX(-50%);width:0;height:0;
+           border-left:var(--pw) solid transparent;border-right:var(--pw) solid transparent;
+           border-top:var(--ph) solid #c0392b;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+           pointer-events:none;z-index:10}
+  #spinBtn{padding:14px 0;width:100%;max-width:var(--mx);font-size:1.1rem;font-weight:700;
+           border:none;border-radius:12px;background:#000;color:#fff;cursor:pointer}
+  details{width:100%;max-width:var(--mx)}
+  summary{cursor:pointer;text-align:center;padding:6px;color:#555;font-size:.95rem}
+  ul#list{list-style:none;padding:0;margin:0}
+  ul#list li{display:flex;align-items:center;justify-content:space-between;
+             margin:4px 0;padding:10px;border-radius:8px;background:#fff;border:1px solid #ddd}
+  ul#list li span{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .iconBtn{border:none;background:none;font-size:1.2rem;cursor:pointer;padding:6px}
+  .delete{color:var(--danger)}.edit{color:#3949ab}
 
-/* 입력 */
-#addForm{display:flex;gap:8px;width:100%;max-width:var(--mx)}
-#dishInput{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1rem}
-#addBtn{padding:12px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:600}
-
-/* 룰렛 */
-#wrapper{position:relative;width:100%;max-width:var(--mx)}
-canvas#wheel{width:100%;aspect-ratio:1/1;border-radius:50%;background:#fff;
-             filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
-#pointer{
-  --pw:clamp(14px,4vw,20px);
-  --ph:calc(var(--pw)*1.45);
-
-  position:absolute;left:50%;
-  /* 삼각형 높이 절반만 위로 – 입력창 바로 아래에 자리 */
-  top:calc(-0.5*var(--ph) + env(safe-area-inset-top));
-  transform:translateX(-50%);
-  width:0;height:0;
-
-  border-left:var(--pw) solid transparent;
-  border-right:var(--pw) solid transparent;
-  border-top:var(--ph) solid #c0392b;      /* ▼ */
-
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
-  pointer-events:none;z-index:100;
-}
-
-/* 버튼 */
-#spinBtn{padding:14px 0;width:100%;max-width:var(--mx);font-size:1.1rem;font-weight:700;
-         border:none;border-radius:12px;background:#000;color:#fff}
-#spinBtn:disabled{opacity:.4}
-
-/* 목록 */
-details{width:100%;max-width:var(--mx)}
-summary{cursor:pointer;text-align:center;padding:6px;color:#555;font-size:.95rem}
-ul#list{list-style:none;padding:0;margin:0;max-height:50vh;overflow:auto}
-ul#list li{display:flex;justify-content:space-between;align-items:center;
-           margin:4px 0;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff}
-ul#list li span{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.iconBtn{border:none;background:none;font-size:1.2rem;cursor:pointer;padding:6px}
-.delete{color:var(--danger)}.edit{color:#3949ab}
-
-/* 모달 */
-#modal{position:fixed;inset:env(safe-area-inset-top) env(safe-area-inset-right)
-       env(safe-area-inset-bottom) env(safe-area-inset-left);
-       display:grid;place-items:center;background:rgba(0,0,0,.45);
-       backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.25s}
-#modal.show{opacity:1;visibility:visible}
-.box{background:#fff;padding:28px 22px;border-radius:14px;text-align:center;max-width:80vw;
-     animation:pop .35s cubic-bezier(.4,1.4,.6,1)}
-#closeBtn{margin-top:20px;padding:10px 24px;border:none;border-radius:10px;
-          background:var(--accent);color:#fff;font-weight:600}
-@keyframes pop{0%{transform:scale(.5);opacity:.2}100%{transform:scale(1);opacity:1}}
+  /* ── 모달 ── */
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.45);
+         display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;
+         transition:.25s}
+  #modal.show{opacity:1;visibility:visible}
+  #modal .box{background:#fff;padding:28px 22px;border-radius:14px;max-width:80vw;text-align:center;
+              animation:pop .35s cubic-bezier(.4,1.4,.6,1);}
+  #closeBtn{margin-top:20px;padding:10px 24px;border:none;border-radius:10px;
+            background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  @keyframes pop{0%{transform:scale(.5);opacity:.2}100%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
@@ -84,113 +62,124 @@ ul#list li span{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:e
   <button id="addBtn" type="submit">추가</button>
 </form>
 
-<div id="wrapper"><canvas id="wheel"></canvas><div id="pointer"></div></div>
+<div id="wrapper">
+  <canvas id="wheel"></canvas>
+  <div id="pointer"></div>
+</div>
 <button id="spinBtn">돌려!</button>
 
-<details><summary>현재 메뉴 관리 ▾</summary><ul id="list"></ul></details>
+<details>
+  <summary>현재 메뉴 관리 ▾</summary>
+  <ul id="list"></ul>
+</details>
 
 <!-- 모달 -->
-<div id="modal"><div class="box">
-  <h2 id="resultText" style="margin-bottom:12px;font-size:1.25rem"></h2>
-  <button id="closeBtn">닫기</button>
-</div></div>
+<div id="modal">
+  <div class="box">
+    <h2 id="resultText" style="margin-bottom:12px;font-size:1.25rem"></h2>
+    <button id="closeBtn">닫기</button>
+  </div>
+</div>
 
 <script>
-/* ── 데이터 ── */
+/* ── localStorage ── */
 const KEY='lunchRouletteDishes';
-let dishes=JSON.parse(localStorage.getItem(KEY)||'[]');
+let dishes=JSON.parse(localStorage.getItem(KEY)||
+        '["치킨","샌드위치","샐러드","김치찌개","된장찌개","비빔밥","불고기","라면"]');
 
-/* 예시 채우기 버튼 (빈 목록일 때) */
-if(dishes.length===0){
-  dishes=["김치찌개","된장찌개","칼국수","햄버거","샌드위치","샐러드","감자탕","돈까스"];
-}
-
-/* 캔버스 리사이즈 */
-const wrapper=document.getElementById('wrapper');
+/* ── 캔버스 설정 ── */
 const cvs=document.getElementById('wheel'),ctx=cvs.getContext('2d');
-function resize(width){
-  const size=Math.min(width,480),dpr=window.devicePixelRatio||1;
-  cvs.width=cvs.height=size*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw();
+function fitCanvas(){
+  const size=Math.min(document.getElementById('wrapper').clientWidth,480),
+        dpr=window.devicePixelRatio||1;
+  cvs.width=cvs.height=size*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  drawWheel();
 }
-resize(wrapper.clientWidth);
-new ResizeObserver(e=>resize(e[0].contentRect.width)).observe(wrapper);
-addEventListener('orientationchange',()=>setTimeout(()=>resize(wrapper.clientWidth),200));
+window.addEventListener('resize',fitCanvas); fitCanvas();
 
-/* 룰렛 */
+/* ── 룰렛 그리기 ── */
 const pointerDeg=270;
-function draw(){
+function drawWheel(){
   ctx.clearRect(0,0,cvs.width,cvs.height);
-  if(dishes.length===0){spinBtn.disabled=true;renderList();return;}
-  const R=cvs.width/2, slice=360/dishes.length;
-  dishes.forEach((d,i)=>{
-    const st=i*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180-0.001,mid=(st+ed)/2;
+  const R=cvs.width/2,slice=360/dishes.length;
+  dishes.forEach((dish,i)=>{
+    const st=i*slice*Math.PI/180,ed=(i+1)*slice*Math.PI/180,mid=(st+ed)/2;
     ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,st,ed);ctx.closePath();
-    ctx.fillStyle=`hsl(${i*360/dishes.length},60%,75%)`;ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-
+    ctx.fillStyle=`hsl(${i*360/dishes.length},60%,75%)`;
+    ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
     const x=R+Math.cos(mid)*R*0.6,y=R+Math.sin(mid)*R*0.6;
     ctx.save();ctx.translate(x,y);ctx.rotate(mid+Math.PI/2);
-    const fs=Math.max(R*0.11*(12/dishes.length),10);
-    ctx.font=`bold ${fs}px sans-serif`;
-    ctx.fillStyle='#000';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(d.length>6?d.slice(0,5)+'…':d,0,0);
-    ctx.restore();
+    ctx.font=`bold ${Math.max(R*0.1,14)}px sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#000';
+    ctx.fillText(dish,0,0);ctx.restore();
   });
-  spinBtn.disabled=dishes.length<2;
   renderList();
   localStorage.setItem(KEY,JSON.stringify(dishes));
 }
 
-/* 목록 */
+/* ── 목록 ── */
 function renderList(){
-  const ul=document.getElementById('list');ul.innerHTML='';
-  dishes.forEach((d,i)=>{
+  const ul=document.getElementById('list'); ul.innerHTML='';
+  dishes.forEach((dish,i)=>{
     const li=document.createElement('li');
-    li.innerHTML=`<span>${d}</span>
+    li.innerHTML=`<span>${dish}</span>
       <button class="iconBtn edit">✏️</button>
       <button class="iconBtn delete">❌</button>`;
-    li.querySelector('.edit').onclick=()=>{const v=prompt('메뉴 수정',d);
-      if(v&&v.trim()){dishes[i]=v.trim();draw();}};
+    li.querySelector('.edit').onclick=()=>{
+      const v=prompt('메뉴 수정',dish);if(v&&v.trim()){dishes[i]=v.trim();drawWheel();}
+    };
     li.querySelector('.delete').onclick=()=>{
-      if(confirm(`"${d}" 삭제?`)){dishes.splice(i,1);draw();}};
+      if(confirm(`"${dish}" 삭제?`)){dishes.splice(i,1);drawWheel();}
+    };
     ul.appendChild(li);
   });
 }
 
-/* 모달 */
-const modal=document.getElementById('modal'),result=document.getElementById('resultText');
-function show(t){result.textContent=`오늘의 점심은 “${t}” 입니다!`;modal.classList.add('show');
-  const end=Date.now()+1200;(function cf(){confetti({particleCount:14,startVelocity:25,
-    spread:55,origin:{y:.25}});if(Date.now()<end)requestAnimationFrame(cf);})();
-}
-function hide(){modal.classList.remove('show');}
-document.getElementById('closeBtn').onclick=hide;modal.onclick=e=>{if(e.target===modal)hide();}
-addEventListener('keyup',e=>{if(e.key==='Escape')hide();});
+/* ── 캔버스 터치 삭제 ── */
+cvs.addEventListener('click',e=>{
+  const R=cvs.width/2,rect=cvs.getBoundingClientRect(),scale=cvs.width/rect.width,
+        x=(e.clientX-rect.left)*scale,y=(e.clientY-rect.top)*scale,
+        dist=Math.hypot(x-R,y-R);
+  if(dist>R) return;
+  const idx=Math.floor(((Math.atan2(y-R,x-R)*180/Math.PI+360)%360)/(360/dishes.length));
+  if(confirm(`"${dishes[idx]}" 삭제?`)){dishes.splice(idx,1);drawWheel();}
+});
 
-/* 돌리기 */
-const spinBtn=document.getElementById('spinBtn');
-spinBtn.onclick=()=>{
+/* ── 모달 & 폭죽 ── */
+const modal=document.getElementById('modal'),
+      resultEl=document.getElementById('resultText'),
+      closeBtn=document.getElementById('closeBtn');
+function showResult(text){
+  resultEl.textContent=`오늘의 점심은 “${text}” 입니다!`;
+  modal.classList.add('show');
+  /* 폭죽 1.5초 */
+  const end=Date.now()+1500;
+  (function frame(){
+    confetti({particleCount:16,startVelocity:28,spread:60,origin:{y:.25}});
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
+}
+function hideModal(){modal.classList.remove('show');}
+closeBtn.onclick=hideModal; modal.addEventListener('click',e=>{if(e.target===modal)hideModal();});
+window.addEventListener('keyup',e=>{if(e.key==='Escape')hideModal();});
+
+/* ── 돌리기 ── */
+document.getElementById('spinBtn').onclick=()=>{
   if(dishes.length<2){alert('메뉴를 두 개 이상 입력하세요!');return;}
-  spinBtn.disabled=true;
-  gsap.to(cvs,{rotation:`+=${360*4+Math.random()*360}`,duration:3.4,ease:'power4.out',
+  gsap.to(cvs,{rotation:`+=${360*4+Math.random()*360}`,duration:3.5,ease:'power4.out',
     onComplete:()=>{
-      spinBtn.disabled=false;
-      const slice=360/dishes.length,rot=gsap.getProperty(cvs,'rotation'),
-            idx=Math.floor((((pointerDeg-rot)%360)+360)%360/slice);
-      show(dishes[idx]);
+      const slice=360/dishes.length,
+            final=gsap.getProperty(cvs,'rotation'),
+            idx=Math.floor((((pointerDeg-final)%360)+360)%360/slice);
+      showResult(dishes[idx]);
     }});
 };
 
-/* 추가 */
-addForm.onsubmit=e=>{
+/* ── 메뉴 추가 ── */
+document.getElementById('addForm').onsubmit=e=>{
   e.preventDefault();const v=dishInput.value.trim();
-  if(v){dishes.push(v);dishInput.value='';draw();}
+  if(v){dishes.push(v);dishInput.value='';drawWheel();}
 };
-
-/* SW */
-if('serviceWorker'in navigator){
-  addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
-}
 </script>
 </body>
 </html>
