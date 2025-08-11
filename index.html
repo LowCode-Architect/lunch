@@ -324,9 +324,17 @@ function handleCanvasInteraction(e) {
   
   if (dist > R) return;
   
-  const angle = (Math.atan2(pos.y - R, pos.x - R) * 180 / Math.PI + 360) % 360;
+  // 현재 캔버스 회전각도를 GSAP에서 가져오기
+  const currentRotation = gsap.getProperty(cvs, 'rotation') || 0;
+  
+  // 클릭 위치의 각도 계산
+  let clickAngle = (Math.atan2(pos.y - R, pos.x - R) * 180 / Math.PI + 360) % 360;
+  
+  // 회전된 캔버스를 고려하여 실제 메뉴 위치 계산
+  let adjustedAngle = (clickAngle + currentRotation) % 360;
+  
   const slice = 360 / dishes.length;
-  const idx = Math.floor(angle / slice);
+  const idx = Math.floor(adjustedAngle / slice) % dishes.length;
   
   if (idx >= 0 && idx < dishes.length) {
     // 현재 메뉴 이름을 정확히 가져와서 확인창에 표시
