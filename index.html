@@ -101,6 +101,9 @@
 <details>
   <summary>현재 메뉴 관리 ▾</summary>
   <ul id="list"></ul>
+  <div style="text-align: center; margin-top: 16px;">
+    <button onclick="resetToDefault()" style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 6px; background: #f5f5f5; color: #666; cursor: pointer; font-size: 0.9rem;">기본 메뉴로 초기화</button>
+  </div>
 </details>
 
 <!-- 모달 -->
@@ -113,8 +116,44 @@
 
 <script>
 /* ── 전역 변수 ── */
-let dishes = ["치킨","샌드위치","샐러드","김치찌개","된장찌개","비빔밥","불고기","라면"];
+const DEFAULT_DISHES = ["치킨","샌드위치","샐러드","김치찌개","된장찌개","비빔밥","불고기","라면"];
+let dishes = [];
 let isSpinning = false;
+
+/* ── 로컬스토리지 관리 ── */
+function loadDishes() {
+  try {
+    const saved = localStorage.getItem('lunchMenuDishes');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        dishes = parsed;
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn('저장된 메뉴를 불러오는데 실패했습니다:', e);
+  }
+  
+  // 저장된 데이터가 없거나 오류가 있으면 기본값 사용
+  dishes = [...DEFAULT_DISHES];
+}
+
+function saveDishes() {
+  try {
+    localStorage.setItem('lunchMenuDishes', JSON.stringify(dishes));
+  } catch (e) {
+    console.warn('메뉴를 저장하는데 실패했습니다:', e);
+  }
+}
+
+function resetToDefault() {
+  if (confirm('기본 메뉴로 초기화하시겠습니까?')) {
+    dishes = [...DEFAULT_DISHES];
+    saveDishes();
+    drawWheel();
+  }
+}
 
 /* ── 캔버스 설정 ── */
 const cvs = document.getElementById('wheel');
@@ -152,7 +191,8 @@ window.addEventListener('resize', () => {
   resizeTimeout = setTimeout(fitCanvas, 100);
 });
 
-// 초기 설정
+// 초기 설정 - 저장된 메뉴 불러오기
+loadDishes();
 fitCanvas();
 
 /* ── 룰렛 그리기 ── */
@@ -238,6 +278,7 @@ function renderList() {
         const newName = prompt('메뉴 수정', currentDish);
         if (newName && newName.trim()) {
           dishes[currentIndex] = newName.trim();
+          saveDishes(); // 변경사항 저장
           drawWheel();
         }
       };
@@ -249,6 +290,7 @@ function renderList() {
       return () => {
         if (confirm(`"${currentDish}" 메뉴를 삭제하시겠습니까?`)) {
           dishes.splice(currentIndex, 1);
+          saveDishes(); // 변경사항 저장
           drawWheel();
         }
       };
@@ -291,6 +333,7 @@ function handleCanvasInteraction(e) {
     const menuToDelete = dishes[idx];
     if (confirm(`"${menuToDelete}" 메뉴를 삭제하시겠습니까?`)) {
       dishes.splice(idx, 1);
+      saveDishes(); // 변경사항 저장
       drawWheel();
     }
   }
@@ -400,11 +443,13 @@ addForm.addEventListener('submit', (e) => {
     
     dishes.push(value);
     dishInput.value = '';
+    saveDishes(); // 변경사항 저장
     drawWheel();
   }
 });
 
-// 초기 렌더링
+// 초기 렌더링 - 저장된 데이터로 시작
+loadDishes();
 drawWheel();
 </script>
 </body>
